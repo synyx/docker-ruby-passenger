@@ -1,9 +1,6 @@
 FROM ruby:2.5.3-alpine3.8
 
 ENV PASSENGER_VERSION 5.3.6
-ENV RAILS_ENV production
-
-WORKDIR /app
 
 RUN apk update \
  && apk add curl libexecinfo pcre \
@@ -38,5 +35,3 @@ RUN apk update \
  # Remove all those build dependencies & caches
  && apk del .build-deps \
  && rm -rf /var/cache/apk/* /usr/local/bundle/cache/*
-
-RUN chown -R nobody:nobody /app
