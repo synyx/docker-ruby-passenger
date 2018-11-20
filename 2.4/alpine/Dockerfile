@@ -35,3 +35,6 @@ RUN apk update \
  # Remove all those build dependencies & caches
  && apk del .build-deps \
  && rm -rf /var/cache/apk/* /usr/local/bundle/cache/*
+
+WORKDIR /app
+CMD [ "/usr/local/bundle/bin/passenger", "start", ".", "--nginx-bin","/opt/nginx/sbin/nginx", "--log-file", "/dev/stderr" ]
