@@ -43,4 +43,4 @@ RUN apk update \
 
 WORKDIR /app
 EXPOSE 3000
-ENTRYPOINT ["passenger", "start", "--no-install-runtime", "--no-compile-runtime", "--log-file", "/dev/stderr"]
+CMD ["passenger", "start", "--no-install-runtime", "--no-compile-runtime", "--log-file", "/dev/stderr"]
