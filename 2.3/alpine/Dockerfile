@@ -21,7 +21,6 @@ RUN apk update \
  && passenger-config compile-agent --auto --optimize \
  && passenger-config install-standalone-runtime --auto --url-root=no-builds-for-alpine --connect-timeout=1 \
  && passenger-config build-native-support \
- && passenger-config validate-install \
  # Cleanup passenger build products
  && mkdir /tmp/passenger-keep \
  && mv ${PASSENGER_ROOT}/src/ruby_supportlib /tmp/passenger-keep/ \
@@ -39,7 +38,8 @@ RUN apk update \
  && strip ${PASSENGER_ROOT}/buildout/ruby/ruby-*/passenger_native_support.so \
  # Remove all those build dependencies & caches
  && apk del .build-deps \
- && rm -rf /var/cache/apk/* /tmp/*
+ && rm -rf /var/cache/apk/* /tmp/* \
+ && passenger-config validate-install
 
 WORKDIR /app
 EXPOSE 3000
