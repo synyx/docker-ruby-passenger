@@ -1,40 +1,46 @@
 FROM ruby:2.5.3-alpine3.8
 
-ENV PASSENGER_VERSION 5.3.6
+ARG PASSENGER_VERSION=5.3.6
+ENV PASSENGER_VERSION ${PASSENGER_VERSION}
+ENV PASSENGER_ROOT "/opt/passenger"
+ENV PATH "${PASSENGER_ROOT}/bin:$PATH"
 
 RUN apk update \
- && apk add curl libexecinfo pcre \
+ && apk add curl libexecinfo libstdc++ pcre \
  && apk add --virtual .build-deps \
       build-base curl-dev libexecinfo-dev libressl-dev linux-headers pcre-dev wget \
+ # Download & extract passenger
+ && mkdir /opt \
+ && curl -L https://s3.amazonaws.com/phusion-passenger/releases/passenger-$PASSENGER_VERSION.tar.gz | \
+    tar -xzf - -C /opt \
+ && mv /opt/passenger-$PASSENGER_VERSION /opt/passenger \
+ && chown -R root:root /opt/passenger \
  # Build & validate passenger with nginx
- && gem install passenger -v ${PASSENGER_VERSION} --no-ri --no-rdoc \
- && EXTRA_CFLAGS="-s" EXTRA_CXXFLAGS="-s" passenger-install-nginx-module --auto-download --auto \
+ && export EXTRA_PRE_CFLAGS='-O' EXTRA_PRE_CXXFLAGS='-O' EXTRA_LDFLAGS='-lexecinfo' \
+ && mkdir /tmp/passenger-compile \
+ && passenger-config compile-agent --auto --optimize \
+ && passenger-config install-standalone-runtime --auto --url-root=no-builds-for-alpine --connect-timeout=1 \
+ && passenger-config build-native-support \
  && passenger-config validate-install \
  # Cleanup passenger build products
- && PASSENGER_ROOT=`passenger-config about root` \
- && mv ${PASSENGER_ROOT}/src/ruby_supportlib /tmp/passenger.ruby_supportlib \
- && mv ${PASSENGER_ROOT}/src/helper-scripts /tmp/passenger.helper-scripts \
+ && mkdir /tmp/passenger-keep \
+ && mv ${PASSENGER_ROOT}/src/ruby_supportlib /tmp/passenger-keep/ \
+ && mv ${PASSENGER_ROOT}/src/helper-scripts /tmp/passenger-keep/ \
  ## Remove obvious directories
  && rm -rf ${PASSENGER_ROOT}/src/* \
            ${PASSENGER_ROOT}/build \
-           ${PASSENGER_ROOT}/dev \
            ${PASSENGER_ROOT}/doc \
-           ${PASSENGER_ROOT}/download_cache \
            ${PASSENGER_ROOT}/man \
  # Remove obvious binary by-products
  && find ${PASSENGER_ROOT}/buildout -type f -name '*.o' -delete \
- # Remove unneeded src & build directories
- && rm -rf ${PASSENGER_ROOT}/buildout/common \
-           ${PASSENGER_ROOT}/buildout/libev \
-           ${PASSENGER_ROOT}/buildout/libuv \
  # Restore final binaries
- && mv /tmp/passenger.ruby_supportlib ${PASSENGER_ROOT}/src/ruby_supportlib \
- && mv /tmp/passenger.helper-scripts ${PASSENGER_ROOT}/src/helper-scripts \
- && strip ${PASSENGER_ROOT}/buildout/support-binaries/PassengerAgent \
- && strip /opt/nginx/sbin/nginx \
+ && mv /tmp/passenger-keep/* ${PASSENGER_ROOT}/src/ \
+ && strip ${PASSENGER_ROOT}/buildout/support-binaries/* \
+ && strip ${PASSENGER_ROOT}/buildout/ruby/ruby-*/passenger_native_support.so \
  # Remove all those build dependencies & caches
  && apk del .build-deps \
- && rm -rf /var/cache/apk/* /usr/local/bundle/cache/*
+ && rm -rf /var/cache/apk/* /tmp/*
 
 WORKDIR /app
-CMD [ "/usr/local/bundle/bin/passenger", "start", ".", "--nginx-bin","/opt/nginx/sbin/nginx", "--log-file", "/dev/stderr" ]
+EXPOSE 3000
+CMD ["passenger", "start", "--no-install-runtime", "--no-compile-runtime", "--log-file", "/dev/stderr"]
