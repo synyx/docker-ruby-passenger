@@ -2,6 +2,7 @@ Ruby w/ Passenger Phusion
 =========================
 
 [![](https://images.microbadger.com/badges/image/synyx/ruby-passenger.svg)](https://microbadger.com/images/synyx/ruby-passenger "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/synyx/ruby-passenger.svg)](https://microbadger.com/images/synyx/ruby-passenger "Get your own version badge on microbadger.com")
 
 **CAUTON**: This is a Work-In-Progress.
 
