@@ -6,7 +6,7 @@ ENV PASSENGER_ROOT "/opt/passenger"
 ENV PATH "${PASSENGER_ROOT}/bin:$PATH"
 
 RUN apk update \
- && apk add curl libexecinfo libstdc++ pcre \
+ && apk add curl libexecinfo libstdc++ pcre tini \
  && apk add --virtual .build-deps \
       build-base curl-dev libexecinfo-dev libressl-dev linux-headers pcre-dev wget \
  # Download & extract passenger
@@ -43,4 +43,5 @@ RUN apk update \
 
 WORKDIR /app
 EXPOSE 3000
+ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["passenger", "start", "--no-install-runtime", "--no-compile-runtime", "--log-file", "/dev/stderr"]
