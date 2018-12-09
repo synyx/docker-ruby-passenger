@@ -44,8 +44,8 @@ RUN apk update \
 WORKDIR /app
 EXPOSE 3000
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["passenger", "start",
-     "--no-install-runtime", "--no-compile-runtime",
-     "--log-file", "/dev/stderr",
-     "--disable-security-update-check"
+CMD ["passenger", "start", \
+     "--no-install-runtime", "--no-compile-runtime", \
+     "--log-file", "/dev/stderr", \
+     "--disable-security-update-check" \
      "--disable-anonymous-telemetry"]
