@@ -1,5 +1,10 @@
 FROM ruby:2.5.3-alpine3.8
 
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.name="ruby-passenger" \
+      org.label-schema.description="An Alpine Linux based minimal Ruby/Passenger base image" \
+      org.label-schema.vendor="synyx GmbH & Co. KG"
+
 ARG PASSENGER_VERSION=6.0.0
 ENV PASSENGER_VERSION ${PASSENGER_VERSION}
 ENV PASSENGER_ROOT "/opt/passenger"
