@@ -5,7 +5,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="An Alpine Linux based minimal Ruby/Passenger base image" \
       org.label-schema.vendor="synyx GmbH & Co. KG"
 
-ARG PASSENGER_VERSION=6.0.0
+ARG PASSENGER_VERSION=6.0.2
 ENV PASSENGER_VERSION ${PASSENGER_VERSION}
 ENV PASSENGER_ROOT "/opt/passenger"
 ENV PATH "${PASSENGER_ROOT}/bin:$PATH"
