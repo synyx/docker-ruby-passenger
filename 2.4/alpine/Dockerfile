@@ -15,7 +15,7 @@ RUN apk update \
  && apk add --virtual .build-deps \
       build-base curl-dev libexecinfo-dev libressl-dev linux-headers pcre-dev wget \
  # Download & extract passenger
- && mkdir /opt \
+ && mkdir -p /opt \
  && curl -L https://s3.amazonaws.com/phusion-passenger/releases/passenger-$PASSENGER_VERSION.tar.gz | \
     tar -xzf - -C /opt \
  && mv /opt/passenger-$PASSENGER_VERSION /opt/passenger \
