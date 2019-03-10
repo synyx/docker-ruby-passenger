@@ -1,4 +1,4 @@
-FROM ruby:2.4.5-alpine3.8
+FROM ruby:2.4.5-alpine3.9
 
 LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.name="ruby-passenger" \
