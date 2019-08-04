@@ -1,9 +1,11 @@
 Ruby w/ Passenger Phusion
 =========================
 
-[![](https://images.microbadger.com/badges/image/synyx/ruby-passenger.svg)](https://microbadger.com/images/synyx/ruby-passenger "Get your own image badge on microbadger.com")
-[![](https://images.microbadger.com/badges/version/synyx/ruby-passenger.svg)](https://microbadger.com/images/synyx/ruby-passenger "Get your own version badge on microbadger.com")
+**DEPRECATED**: *This project is now deprecated. It was meant as small
+base image for deploying [Ruby On Rails](https://rubyonrails.org)
+applications with Docker and Kubernetes. We now recommend using
+[ruby](https://hub.docker.com/_/ruby) base images and run applications
+with [Puma](https://puma.io).*
 
-**CAUTON**: This is a Work-In-Progress.
-
-An image, that tries to have to be a reasonably small base to allow running Ruby web applications with Phusion Passenger. It aims to install everything that is needed for running Passenger with a nginx webserver, while stripping all the cruft.
+*The code will remain as an example for how to build small images for
+complicated software like Phusion Passenger*
